@@ -1,0 +1,73 @@
+specVersion: 1.2.0
+description: Alchemix User Earnings Indexer - Tracks user earnings across
+  Alchemix protocol deployments
+repository: https://github.com/pastelfork/alchemix-user-earnings-thegraph
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: AlchemistV2-AlUSD
+    network: mainnet
+    source:
+      abi: AlchemistV2Impl
+      address: "0x5C6374a2ac4EBC38DeA0Fc1F8716e5Ea1AdD94dd"
+      startBlock: 14265993
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - YieldToken
+        - Depositor
+        - HarvestEvent
+        - UserHarvestShare
+        - DonateEvent
+        - UserDonateShare
+      abis:
+        - name: AlchemistV2Proxy
+          file: ./abis/AlchemistV2ProxyAbi.json
+        - name: AlchemistV2Impl
+          file: ./abis/AlchemistV2ImplAbi.json
+      eventHandlers:
+        - event: AddYieldToken(indexed address)
+          handler: handleAddYieldToken
+        - event: Deposit(indexed address,indexed address,uint256,address)
+          handler: handleDeposit
+        - event: Harvest(indexed address,uint256,uint256,uint256)
+          handler: handleHarvest
+        - event: Donate(indexed address,indexed address,uint256)
+          handler: handleDonate
+      file: ./src/mappings/alchemist-v2.ts
+  - kind: ethereum/contract
+    name: AlchemistV2-AlETH
+    network: mainnet
+    source:
+      abi: AlchemistV2Impl
+      address: "0x062Bf725dC4cDF947aa79Ca2aaCCD4F385b13b5c"
+      startBlock: 14265993
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.9
+      language: wasm/assemblyscript
+      entities:
+        - YieldToken
+        - Depositor
+        - HarvestEvent
+        - UserHarvestShare
+        - DonateEvent
+        - UserDonateShare
+      abis:
+        - name: AlchemistV2Proxy
+          file: ./abis/AlchemistV2ProxyAbi.json
+        - name: AlchemistV2Impl
+          file: ./abis/AlchemistV2ImplAbi.json
+      eventHandlers:
+        - event: AddYieldToken(indexed address)
+          handler: handleAddYieldToken
+        - event: Deposit(indexed address,indexed address,uint256,address)
+          handler: handleDeposit
+        - event: Harvest(indexed address,uint256,uint256,uint256)
+          handler: handleHarvest
+        - event: Donate(indexed address,indexed address,uint256)
+          handler: handleDonate
+      file: ./src/mappings/alchemist-v2.ts

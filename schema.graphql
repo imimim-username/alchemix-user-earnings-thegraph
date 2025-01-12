@@ -1,0 +1,363 @@
+type YieldToken @entity {
+  id: ID!
+  yieldToken: Bytes!
+  depositors: [Depositor!]! @derivedFrom(field: "yieldToken")
+  totalShares: BigInt!
+  decimals: Int!
+}
+
+type Depositor @entity {
+  id: ID!
+  depositor: Bytes!
+  yieldToken: YieldToken!
+  totalUnderlyingTokenEarned: BigDecimal!
+  totalDonationsReceived: BigDecimal!
+  harvestShares: [UserHarvestShare!]! @derivedFrom(field: "depositor")
+  donateShares: [UserDonateShare!]! @derivedFrom(field: "depositor")
+}
+
+type HarvestEvent @entity {
+  id: ID!
+  blockNumber: BigInt!
+  yieldToken: YieldToken!
+  totalHarvested: BigInt!
+  credit: BigInt!
+  userShares: [UserHarvestShare!]! @derivedFrom(field: "harvestEvent")
+}
+
+type UserHarvestShare @entity {
+  id: ID!
+  depositor: Depositor!
+  yieldToken: YieldToken!
+  harvestEvent: HarvestEvent!
+  shares: BigInt!
+  totalAlchemistShares: BigInt!
+  userEarnings: BigDecimal!
+  blockNumber: BigInt!
+}
+
+type DonateEvent @entity {
+  id: ID!
+  blockNumber: BigInt!
+  yieldToken: YieldToken!
+  debtTokensBurned: BigInt!
+  userShares: [UserDonateShare!]! @derivedFrom(field: "donateEvent")
+}
+
+type UserDonateShare @entity {
+  id: ID!
+  depositor: Depositor!
+  yieldToken: YieldToken!
+  donateEvent: DonateEvent!
+  shares: BigInt!
+  totalAlchemistShares: BigInt!
+  donationReceived: BigDecimal!
+  blockNumber: BigInt!
+}
+type AddUnderlyingToken @entity(immutable: true) {
+  id: Bytes!
+  underlyingToken: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type AddYieldToken @entity(immutable: true) {
+  id: Bytes!
+  yieldToken: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type AdminUpdated @entity(immutable: true) {
+  id: Bytes!
+  admin: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ApproveMint @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  spender: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ApproveWithdraw @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  spender: Bytes! # address
+  yieldToken: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Burn @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  amount: BigInt! # uint256
+  recipient: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type CreditUnlockRateUpdated @entity(immutable: true) {
+  id: Bytes!
+  yieldToken: Bytes! # address
+  blocks: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Deposit @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  yieldToken: Bytes! # address
+  amount: BigInt! # uint256
+  recipient: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Donate @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  yieldToken: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Harvest @entity(immutable: true) {
+  id: Bytes!
+  yieldToken: Bytes! # address
+  minimumAmountOut: BigInt! # uint256
+  totalHarvested: BigInt! # uint256
+  credit: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Initialized @entity(immutable: true) {
+  id: Bytes!
+  version: Int! # uint8
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type KeeperSet @entity(immutable: true) {
+  id: Bytes!
+  sentinel: Bytes! # address
+  flag: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Liquidate @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  yieldToken: Bytes! # address
+  underlyingToken: Bytes! # address
+  shares: BigInt! # uint256
+  credit: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type LiquidationLimitUpdated @entity(immutable: true) {
+  id: Bytes!
+  underlyingToken: Bytes! # address
+  maximum: BigInt! # uint256
+  blocks: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MaximumExpectedValueUpdated @entity(immutable: true) {
+  id: Bytes!
+  yieldToken: Bytes! # address
+  maximumExpectedValue: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MaximumLossUpdated @entity(immutable: true) {
+  id: Bytes!
+  yieldToken: Bytes! # address
+  maximumLoss: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MinimumCollateralizationUpdated @entity(immutable: true) {
+  id: Bytes!
+  minimumCollateralization: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Mint @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  amount: BigInt! # uint256
+  recipient: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type MintingLimitUpdated @entity(immutable: true) {
+  id: Bytes!
+  maximum: BigInt! # uint256
+  blocks: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type PendingAdminUpdated @entity(immutable: true) {
+  id: Bytes!
+  pendingAdmin: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProtocolFeeReceiverUpdated @entity(immutable: true) {
+  id: Bytes!
+  protocolFeeReceiver: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ProtocolFeeUpdated @entity(immutable: true) {
+  id: Bytes!
+  protocolFee: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Repay @entity(immutable: true) {
+  id: Bytes!
+  sender: Bytes! # address
+  underlyingToken: Bytes! # address
+  amount: BigInt! # uint256
+  recipient: Bytes! # address
+  credit: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type RepayLimitUpdated @entity(immutable: true) {
+  id: Bytes!
+  underlyingToken: Bytes! # address
+  maximum: BigInt! # uint256
+  blocks: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SentinelSet @entity(immutable: true) {
+  id: Bytes!
+  sentinel: Bytes! # address
+  flag: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Snap @entity(immutable: true) {
+  id: Bytes!
+  yieldToken: Bytes! # address
+  expectedValue: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SweepRewardTokens @entity(immutable: true) {
+  id: Bytes!
+  rewardToken: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type SweepTokens @entity(immutable: true) {
+  id: Bytes!
+  token: Bytes! # address
+  amount: BigInt! # uint256
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TokenAdapterUpdated @entity(immutable: true) {
+  id: Bytes!
+  yieldToken: Bytes! # address
+  tokenAdapter: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type TransmuterUpdated @entity(immutable: true) {
+  id: Bytes!
+  transmuter: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type UnderlyingTokenEnabled @entity(immutable: true) {
+  id: Bytes!
+  underlyingToken: Bytes! # address
+  enabled: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type Withdraw @entity(immutable: true) {
+  id: Bytes!
+  owner: Bytes! # address
+  yieldToken: Bytes! # address
+  shares: BigInt! # uint256
+  recipient: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type YieldTokenEnabled @entity(immutable: true) {
+  id: Bytes!
+  yieldToken: Bytes! # address
+  enabled: Boolean! # bool
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
