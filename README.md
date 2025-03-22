@@ -28,6 +28,11 @@ git clone https://github.com/pastelfork/alchemix-user-earnings-thegraph.git
 cd alchemix-user-earnings-thegraph
 ```
 
+1.1 Authenticate in graph studio
+```bash
+git auth --studio [deploy key]
+```
+
 2. Build and deploy:
 
 ```bash
