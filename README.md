@@ -32,6 +32,11 @@ cd alchemix-user-earnings-thegraph
 ```bash
 graph auth --studio [deploy key]
 ```
+or
+```bash
+graph auth [deploy key]
+```
+depending on version of graph installed
 
 2. Build and deploy:
 
