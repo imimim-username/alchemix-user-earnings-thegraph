@@ -48,7 +48,7 @@ export function handleAddYieldToken(event: AddYieldTokenEvent): void {
  */
 export function handleDeposit(event: DepositEvent): void {
   let depositorId =
-    event.params.sender.toHexString() +
+    event.params.recipient.toHexString() +
     "-" +
     event.params.yieldToken.toHexString();
   let depositor = DepositorEntity.load(depositorId);
@@ -56,7 +56,7 @@ export function handleDeposit(event: DepositEvent): void {
   // Initialize new depositor if they don't exist
   if (depositor == null) {
     depositor = new DepositorEntity(depositorId);
-    depositor.depositor = event.params.sender;
+    depositor.depositor = event.params.recipient;
     depositor.yieldToken = event.params.yieldToken.toHexString();
     depositor.totalUnderlyingTokenEarned = BigDecimal.fromString("0");
     depositor.totalDonationsReceived = BigDecimal.fromString("0");
